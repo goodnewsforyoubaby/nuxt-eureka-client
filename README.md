@@ -27,7 +27,12 @@ yarn add nuxt-eureka-client # or npm install nuxt-eureka-client
     'nuxt-eureka-client',
 
     // With options
-    ['nuxt-eureka-client', { /* module options */ }]
+    [
+      'nuxt-eureka-client',
+      {
+        /* module options */
+      }
+    ]
   ]
 }
 ```
@@ -45,17 +50,14 @@ yarn add nuxt-eureka-client # or npm install nuxt-eureka-client
 Copyright (c) Kirill Urazmanov
 
 <!-- Badges -->
+
 [npm-version-src]: https://img.shields.io/npm/v/nuxt-eureka-client/latest.svg
 [npm-version-href]: https://npmjs.com/package/nuxt-eureka-client
-
 [npm-downloads-src]: https://img.shields.io/npm/dt/nuxt-eureka-client.svg
 [npm-downloads-href]: https://npmjs.com/package/nuxt-eureka-client
-
 [github-actions-ci-src]: https://github.com/https://github.com/goodnewsforyoubaby/nuxt-eureka-client/workflows/ci/badge.svg
 [github-actions-ci-href]: https://github.com/https://github.com/goodnewsforyoubaby/nuxt-eureka-client/actions?query=workflow%3Aci
-
 [codecov-src]: https://img.shields.io/codecov/c/github/https://github.com/goodnewsforyoubaby/nuxt-eureka-client.svg
 [codecov-href]: https://codecov.io/gh/https://github.com/goodnewsforyoubaby/nuxt-eureka-client
-
 [license-src]: https://img.shields.io/npm/l/nuxt-eureka-client.svg
 [license-href]: https://npmjs.com/package/nuxt-eureka-client
