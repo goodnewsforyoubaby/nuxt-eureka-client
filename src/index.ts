@@ -1,4 +1,5 @@
 import { resolve } from 'path'
+import { ServerResponse } from 'http'
 import { Eureka } from 'eureka-js-client'
 import { Module } from '@nuxt/types'
 
@@ -7,7 +8,7 @@ interface Route {
   appId: string
 }
 
-interface ModuleOptions {
+export interface ModuleOptions {
   enabled: boolean
   appName: string
   eurekaHostname: string
@@ -15,12 +16,29 @@ interface ModuleOptions {
   eurekaRoutes: string
 }
 
-interface EurekaOptions extends ModuleOptions {
+export interface EurekaOptions extends ModuleOptions {
   selfHostname: string
   selfPort: number
 }
 
 const nextIndex: { [k: string]: number } = {}
+
+const eurekaServerMiddleware = [
+  {
+    path: '/info',
+    handler: (_: never, res: ServerResponse) => {
+      res.statusCode = 200
+      res.end()
+    }
+  },
+  {
+    path: '/health',
+    handler: (_: never, res: ServerResponse) => {
+      res.statusCode = 200
+      res.end()
+    }
+  }
+]
 
 const createEurekaClient = (options: EurekaOptions) => {
   const url = `http://${options.selfHostname}:${options.selfPort}`
@@ -73,10 +91,12 @@ const eurekaModule: Module<ModuleOptions> = function (options: ModuleOptions) {
     return
   }
 
-  const { nuxt, addPlugin } = this
+  const { nuxt, addPlugin, addServerMiddleware } = this
 
   let eureka: Eureka | null
   const routes = getRoutes(options.eurekaRoutes)
+
+  eurekaServerMiddleware.forEach(addServerMiddleware)
 
   addPlugin({
     src: resolve(__dirname, './plugin.js'),
@@ -99,4 +119,5 @@ const eurekaModule: Module<ModuleOptions> = function (options: ModuleOptions) {
   })
 }
 
-export default eurekaModule
+module.exports = eurekaModule
+module.exports.meta = require('../package.json')
