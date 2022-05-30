@@ -11,14 +11,11 @@ interface Route {
 export interface ModuleOptions {
   enabled: boolean
   appName: string
+  hostname: string
+  port: number
   eurekaHostname: string
   eurekaPort: number
   eurekaRoutes: string
-}
-
-export interface EurekaOptions extends ModuleOptions {
-  selfHostname: string
-  selfPort: number
 }
 
 const nextIndex: { [k: string]: number } = {}
@@ -40,15 +37,15 @@ const eurekaServerMiddleware = [
   }
 ]
 
-const createEurekaClient = (options: EurekaOptions) => {
-  const url = `http://${options.selfHostname}:${options.selfPort}`
+const createEurekaClient = (options: ModuleOptions) => {
+  const url = `http://${options.hostname}:${options.port}`
   return new Eureka({
     shouldUseDelta: true,
     instance: {
       app: options.appName,
-      hostName: options.selfHostname,
-      ipAddr: options.selfHostname,
-      port: { $: options.selfPort, '@enabled': true },
+      hostName: options.hostname,
+      ipAddr: options.hostname,
+      port: { $: options.port, '@enabled': true },
       vipAddress: options.appName,
       statusPageUrl: `${url}/info`,
       healthCheckUrl: `${url}/health`,
@@ -105,7 +102,10 @@ const eurekaModule: Module<ModuleOptions> = function (options: ModuleOptions) {
   })
 
   nuxt.hook('listen', (_: any, { host, port }: any) => {
-    eureka = createEurekaClient({ ...options, selfHostname: host, selfPort: port })
+    options.hostname ??= host
+    options.port ??= port
+
+    eureka = createEurekaClient(options)
     eureka.start()
 
     const $eureka = { getNextInstanceByUrl: getNextInstanceByUrl(routes, eureka) }
