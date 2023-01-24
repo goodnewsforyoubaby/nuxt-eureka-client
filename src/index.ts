@@ -34,6 +34,13 @@ const eurekaServerMiddleware = [
       res.statusCode = 200
       res.end()
     }
+  },
+  {
+    path: '/actuator',
+    handler: (_: never, res: ServerResponse) => {
+      res.statusCode = 200
+      res.end()
+    }
   }
 ]
 
